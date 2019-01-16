@@ -1,0 +1,36 @@
+<% include ../templates/header.ejs %>
+<link type="text/css" rel="stylesheet" href="/css/products.css">
+
+<div class="wrapper">
+    <div class="nav-wrapper">
+        <% include ../templates/nav.ejs %>
+    </div>
+    <div class="content-wrapper">
+        <% include ../templates/message.ejs %>
+        <div class="form">
+            <form action="/product" method="POST" class="ui form">
+                <div class="field">
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title" placeholder="e.g Beats" required>
+                </div>
+                <div class="field">
+                    <label for="price">Price:</label>
+                    <input type="number" id="price" name="price" min="0" required>
+                </div>
+                <div class="field">
+                    <label for="imageUrl">Image Link:</label>
+                    <input type="text" id="imageUrl" name="imageUrl" placeholder="e.g https://www.myimage.com">
+                </div>
+                <div class="field">
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" placeholder="e.g Awesome music exprerience." required></textarea>
+                </div>
+                <div class="field">
+                    <button type="submit" class="ui button">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<% include ../templates/footer.ejs %>

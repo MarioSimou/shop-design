@@ -1,0 +1,30 @@
+<div id="navbar" class="ui large menu">
+  <div class="left menu">
+    <div class="header item">
+      Brand
+    </div>
+    <a href="/" class="item active">
+      Home
+    </a>
+    <a href="/products" class="item">
+      Products
+    </a>
+    <a href="/cart" class="item">
+      Cart
+    </a>
+  </div>
+  <div class="right menu">
+    <% if(!user) { %>
+    <div class="item">
+      <a class="ui primary button" href="/register">Register</a>
+    </div>
+    <div class="item">
+      <a class="ui primary button" href="/login">Login</a>
+    </div>
+    <% } else { %>
+    <div class="item">
+      <a class="ui primary button" href="/logout">Logout</a>
+    </div>
+    <% } %>
+  </div>
+</div>

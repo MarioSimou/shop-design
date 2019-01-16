@@ -1,0 +1,72 @@
+<% include ../templates/header.ejs %>
+<link type="text/css" rel="stylesheet" href="/css/products.css">
+
+<div class="wrapper">
+    <div class="nav-wrapper">
+        <% include ../templates/nav.ejs %>
+    </div>
+    <div class="content-wrapper">
+        <% include ../templates/message.ejs %>
+        <div class="toolbar">
+            <div class="field">
+                <a href="/product/new" class="ui button">Add Product</a>
+            </div>
+            <div class="field">
+                <a href="/" class="ui button">Other Product</a>
+            </div>
+        </div>
+        <div class="products-wrapper">
+            <div class="ui link four column grid cards">
+                <% if( products.length > 0 ) { %>
+                <% products.map( product => { %>
+                <div class="column">
+                    <div class="ui fluid card">
+                        <div class="image">
+                            <img src="<%= product.imageUrl %>">
+                        </div>
+                        <div class="content">
+                            <div class="header">
+                                <%= product.title %>
+                            </div>
+                            <div class="description">
+                                <%= product.description %>
+                            </div>
+                            <div class="decription">
+                                <p><strong>
+                                        <%= product.price %> &pound;</strong></p>
+                            </div>
+                        </div>
+                        <div class="ui bottom attached button">
+                            <a href="/product/<%= product._id %>">
+                                <i class="eye icon"></i>View
+                            </a>
+                        </div>
+                        <div class="ui bottom attached button">
+                            <a href="/product/<%= product._id %>/edit">
+                                <i class="edit icon"></i>Edit
+                            </a>
+                        </div>
+                        <div class="ui bottom attached button">
+                            <form action="/product/<%= product._id %>?_method=DELETE" method="POST">
+                                <button type="submit" class="attached"><i class="trash alternate icon"></i>Delete</button>
+                            </form>
+                        </div>
+                        <div class="ui bottom attached button">
+                            <form action="/cart/<%= product._id %>/new" method="POST">
+                                <button type="submit" class="attached"><i class="cart icon"></i>Add Cart</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+                <% } else { %>
+                <div>
+                    <h4>Products list is not available now.</h4>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include ../templates/footer.ejs %>

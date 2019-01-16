@@ -1,0 +1,23 @@
+<% if(message) { %>
+<div class="message-wrapper">
+    <% if(message.type === 'positive') { %>
+    <div class="ui positive message">
+        <i class="close icon"></i>
+        <div class="header">
+            <%= message.content.header %>
+        </div>
+        <p><%= message.content.main %></p>
+    </div>
+    <% }else if(message.type === 'negative'){  %>
+    <div class="ui negative message">
+        <i class="close icon"></i>
+        <div class="header">
+            <%= message.content.header %>
+        </div>
+        <p>
+            <%= message.content.main %>
+        </p>
+    </div>
+    <% } %>
+</div>
+<% } %>

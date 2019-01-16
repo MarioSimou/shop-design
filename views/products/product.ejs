@@ -1,0 +1,28 @@
+<% include ../templates/header.ejs %>
+<link type="text/css" rel="stylesheet" href="/css/products.css">
+
+<div class="wrapper">
+    <div class="nav-wrapper">
+        <% include ../templates/nav.ejs %>
+    </div>
+    <div class="content-wrapper">
+        <% include ../templates/message.ejs %>
+        <div class="product-details">
+            <div>
+                <h4><%= product.title %> Details</h4>
+            </div>
+            <div>
+                <img src="<%= product.imageUrl%>" alt="<%= product.title %>-img">
+            </div>
+            <div>
+                <strong>Description:&nbsp;</strong><%= product.description %> 
+            </div>
+            <div>
+                <strong>Price:&nbsp;</strong><%= product.price %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include ../templates/footer.ejs %>
+

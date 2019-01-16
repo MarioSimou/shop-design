@@ -1,0 +1,26 @@
+.wrapper > .content-wrapper > .toolbar {
+    width: 100%;
+    display: -webkit-inline-box;
+    flex-direction: column;
+    padding-bottom: 10px;
+    border-bottom: 4px solid rgba(0,0,0,0.6);
+    box-sizing: border-box;
+}
+
+.wrapper > .content-wrapper > .form {
+    width: 100%;
+    max-width: 600px;
+}
+
+.wrapper > .content-wrapper > .products-wrapper {
+    width: 100%;
+    margin-top: 20px;
+}
+
+button.attached {
+    background: transparent;
+    border: none;
+    color: rgba(0,0,0,0.6);
+    font-weight: 600;
+    font-size: 14px;
+}

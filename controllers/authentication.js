@@ -11,25 +11,25 @@ router.get('/register', async (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-    const { username, email, password, confirmPassword, agreeConditions } = req.body;
+    const { username : _username, email : _email , password : _password , confirmPassword : _confirmPassword, agreeConditions : _agreeConditions } = req.body;
 
-    if (username && email && password && confirmPassword && agreeConditions) {
+    if (_username && _email && _password && _confirmPassword && _agreeConditions) {
 
         // checks whether a similar EMAIL OR USERNAME already exists
         const existingUser = await Promise.all([
-            User.findOne({ email }),
-            User.findOne({ username })
+            User.findOne({ _email }),
+            User.findOne({ _username })
         ])
         if (!existingUser[0] && !existingUser[1]) {
-            if (password === confirmPassword) {
+            if ( _password ===  _confirmPassword ) {
                 // hashes user password
-                const hashedPassword = await bcryptjs.hash(password, 12);
+                const hashedPassword = await bcryptjs.hash( _password , 12 );
                 // Creates a user object and cart object
-                const user = new User({ username, email, password: hashedPassword, agreeConditions });
-                const cart = new Cart({ user });
+                const user = new User({ _username, _email, _password: hashedPassword, _agreeConditions });
+                const cart = new Cart({ _user : user });
 
                 // Updates user with the cart   
-                user.cartId = cart.id
+                user._cartId = cart._id 
 
                 // commits the user object to the database (cart object is not commited because it will be keep updated)
                 await Promise.all([
@@ -65,16 +65,16 @@ router.get('/login', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const { email:_email, password:_password } = req.body;
+    const user = await User.findOne({ _email });
 
     if (user) {
-        const samePassword = await bcryptjs.compare(password, user.password);
+        const samePassword = await bcryptjs.compare( _password, user._password);
 
         if (samePassword) {
             // checks whether the identified user has a similar password
-            const cart = await Cart.findOne({ _id: user.cartId })
-            console.log(cart);
+            const cart = await Cart.findOne({ _id: user._cartId })
+            
             if (!cart) throw new Error('Unable to track user cart')
 
             // updates session object

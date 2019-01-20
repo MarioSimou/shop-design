@@ -8,21 +8,20 @@
     <div class="content-wrapper">
         <% include ../templates/message.ejs %>
         <div class="product-details">
-            <div>
-                <h4><%= product.title %> Details</h4>
+            <div class="ui header">
+                <h1 class="ui dividing header"><%= product._title %> Details</h1>
             </div>
             <div>
-                <img src="<%= product.imageUrl%>" alt="<%= product.title %>-img">
+                <img src="<%= product._imageUrl%>" alt="<%= product._title %>-img">
             </div>
             <div>
-                <strong>Description:&nbsp;</strong><%= product.description %> 
+                <strong>Description:&nbsp;</strong><%= product._description %> 
             </div>
             <div>
-                <strong>Price:&nbsp;</strong><%= product.price %>
+                <strong>Price:&nbsp;</strong><%= product._price %>
             </div>
         </div>
     </div>
 </div>
 
 <% include ../templates/footer.ejs %>
-

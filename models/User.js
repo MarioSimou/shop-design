@@ -1,20 +1,16 @@
-const crypto = require('crypto');
+const Shop = require('./Shop');
 
-class User {
-    constructor({ _id, username, email, password, agreeConditions }) {
-        this._id = _id ? _id : crypto.pseudoRandomBytes(30).toString('hex');
-        this._username = username;
-        this._email = email;
-        this._password = password;
-        this._agreeConditions = agreeConditions === 'on' ? true : false;
-        this._connection = process.MONGO ? true : false;
-        this._cartId = undefined // object
+class User extends Shop {
+    constructor( { _id, _username, _email, _password, _agreeConditions , _cartId } ) {
+        super( _id )
+        this._username = _username;
+        this._email = _email;
+        this._password = _password;
+        this._agreeConditions = _agreeConditions === 'on' ? true : false;
+        this._cartId = _cartId // object
     }
 
     // Getters and setters of user object
-    get id() {
-        return this._id
-    }
     get username() {
         return this._username
     }
@@ -37,27 +33,23 @@ class User {
         return this._cartId
     }
 
-    static get getClass() {
-        return 'users'
-    }
-
     // Methods
     async save() {
         // checks whether a connection exists
-        if (!this._connection) return null
+        if (!this.connection) return null
         // collection object
         const collection = process.MONGO.collection(User.getClass);
 
         // async code that stores the user object
         try {
         
-            const status = await collection.update({ email: this.email }, {
+            const status = await collection.update({ _email: this.email }, {
                 _id: this.id,
-                username: this.username,
-                email: this.email,
-                password: this.password,
-                agreeConditions: this.agreeConditions,
-                cartId: this.cartId
+                _username: this.username,
+                _email: this.email,
+                _password: this.password,
+                _agreeConditions: this.agreeConditions,
+                _cartId: this.cartId
             }, { upsert: true })
 
             return status ? status.result.ok : null
@@ -93,21 +85,9 @@ class User {
         if (Object.values(query).length < 1) return null
 
         // connects to users collection
-        const userDB = await connection.collection(User.getClass).find(query).next();
+        const user = await connection.collection(User.getClass).find(query).next();
+        return user ? new User( user ) : null
 
-        if (!userDB) return null
-
-        // creates a user object
-        const user = new User({
-            _id: userDB._id,
-            username: userDB.username,
-            email: userDB.email,
-            password: userDB.password,
-            agreeConditions: userDB.agreeConditions
-        })
-        // populates the carts id
-        user.cartId = userDB.cartId;
-        return user;
     }
 }
 

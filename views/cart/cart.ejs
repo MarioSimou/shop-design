@@ -1,12 +1,64 @@
 <% include ../templates/header.ejs %>
+<link rel="stylesheet" type="text/css" href="/css/cart.css">
 
 <div class="wrapper">
     <div class="nav-wrapper">
         <% include ../templates/nav.ejs %>
     </div>
+    <div class="check-out-wrapper">
+        <div class="check-out-btn">
+            <form action="/checkout" method="POST">
+                <button type="submit" class="fluid ui button">Check out</button>
+            </form>
+        </div>
+        <div class="purchase-info">
+
+        </div>
+    </div>
     <div class="content-wrapper">
-        <div style="width: 100%;">
-            This is the Cart page of <b>www.findAllYourProducts.com</b>
+        <div>
+            <% if(cart._products.length > 0) { %>
+            <div class="ui three column grid">
+                <% cart._products.map( product => { %>
+                <div class="column">
+                    <div class="ui fluid card">
+                        <div class="image">
+                            <img src="<%= product.product._imageUrl %>">
+                        </div>
+                        <div class="content">
+                            <div class="header">
+                                <%= product.product._title %>
+                            </div>
+                            <div class="description">
+                                <div class="content">
+                                    <b>Description:</b>&nbsp;
+                                    <%= product.product._description %>
+                                </div>
+                                <div class="price">
+                                    <b>Price per item:</b>&nbsp;
+                                    <%= product.product._price %>&nbsp;&pound;
+                                </div>
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            <span class="left floated">
+                                <b>Total of Items:</b>&nbsp;
+                                <%= product.quantity * product.product._price %>&nbsp;&pound;
+                            </span>
+                            <span class="right floated">
+                                <b>Quantity:</b>&nbsp;
+                                <%= product.quantity %>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+            </div>
+            <% } else { %>
+            <div>
+                <h4>No any products in the cart</h4>
+            </div>
+            <% } %>
         </div>
     </div>
 </div>

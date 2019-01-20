@@ -1,23 +1,15 @@
 const User = require('./User');
 const crypto = require('crypto');
+const Shop = require('./Shop');
 
-
-class Cart {
-    constructor({ _id, _products, user }) {
-        this._id = _id ? _id : crypto.pseudoRandomBytes(30).toString('hex')
-        this._connection = process.MONGO ? true : false
-        this._user = user
+class Cart extends Shop {
+    constructor({ _id, _products, _user }) {
+        super( _id )
+        this._user = _user
         this._products = _products ? _products : []
         this._modifiedDate = new Date()
     }
     // Getters and Setters
-    get id() {
-        return this._id
-    }
-    get connection() {
-        return this._connection
-    }
-
     set user(value) {
         this._user = value
     }
@@ -29,11 +21,10 @@ class Cart {
     set products(value) {
         let existingProduct;
         if (this.products.length > 0) existingProduct = this.products.find(v => v.product._id === value._id)
-        console.log(existingProduct)
         if (existingProduct) {
             existingProduct.quantity += 1
         } else {
-            this._products.push({
+            this.products.push({
                 product: value,
                 quantity: 1
             })
@@ -43,26 +34,30 @@ class Cart {
         return this._products
     }
 
-    static get getClass() {
-        return 'carts'
-    }
-
     // Methods
     async save() {
-        if (!this._connection) return null
+        if (!this.connection) return null
 
         try {
             const status = await process.MONGO.collection(Cart.getClass).update({ _id: this.id }, {
                 _id: this.id,
                 _products: this.products,
-                user: this.user,
-                modifiedDate: this.modifiedDate
+                _user: this.user,
+                _modifiedDate: this.modifiedDate
             }, { upsert: true })
 
             return status ? status.result.ok : null
         } catch (e) {
             throw new Error('Unsuccessful cart insert')
         }
+    }
+
+    async checkout(){
+        if(!this.connection) return null
+
+        const status = await process.MONGO.collection(Cart.getClass).updateOne({ _id : this.id } , { $set : { _products : [] } } )
+
+        return status ? status.result.ok : null
     }
 
     static async findOne(query = {}) {
@@ -76,19 +71,8 @@ class Cart {
             // searches for the cart
             const cart = await process.MONGO.collection(Cart.getClass).findOne(query)
             // returns null if the cart was not found
-            if (!cart) return null
-
-            // creates a cart object to be returned
-            const user = new User({
-                _id: cart.user._id,
-                username: cart.user._username,
-                email: cart.user._email,
-                password: cart.user._password,
-                agreeConditions: cart.user._agreeConditions
-            })
-            user.cartId = cart._id
             
-            return new Cart({ _id: cart._id, _products: cart._products, user: user })
+            return cart ? new Cart( cart ) : null
 
         } catch (e) {
             throw new Error('Unsuccessful cart findOne')

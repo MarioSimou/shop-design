@@ -8,29 +8,21 @@ const router = new Router(),
     User = require('../models/User')
 
 router.get('/cart', middlewares.authentication, async (req, res) => {
-    res.render(path.join(root, 'views', 'cart', 'cart.ejs'), { title: 'Cart' })
+    const cart =  await req.session.cart 
+    res.render(path.join(root, 'views', 'cart', 'cart.ejs'), { title: 'Cart' , cart : cart  })
 });
 
 router.post('/cart/:productId/new', middlewares.authentication, async (req, res) => {
     const { productId } = req.params;
-    const cartSession = req.session.cart
+
     if (productId) {
-        // populates the cart
-        const cart = new Cart({
-            _id: cartSession._id,
-            _products: cartSession._products,
-            user: new User({
-                _id: cartSession._user._id,
-                username: cartSession._user._username,
-                email: cartSession._user._email,
-                password: cartSession._user._password,
-                agreeConditions: cartSession._user._agreeConditions
-            })
-        })
+        // populates the cart object
+        let cart = await req.session.cart
+        cart._user = new User( cart._user ) // creates a user object
+        cart = new Cart( cart )
         cart.products = await Product.findOne({ _id: productId })
         //  updates the session
         req.session.cart = cart;
-
         // commits the changes to the database
         await cart.save();
 
@@ -42,5 +34,20 @@ router.post('/cart/:productId/new', middlewares.authentication, async (req, res)
     }
 });
 
+router.post('/checkout', middlewares.authentication , async ( req , res ) => {
+    // gets the cart objec and checks out
+    let cart = await req.session.cart
+    cart._user = new User( cart._user ) 
+    cart = new Cart( cart )
+    
+    if(cart){
+        await cart.checkout();
+        req.session.message = { type: 'positive', content: { header: 'Successful transaction', main: `Successful payment. Your order will be delivered immediatly` } }
+        res.redirect(302,'/products');
+    }else{
+        req.session.message = { type: 'negative', content: { header: 'Unsuccessful transaction', main: `Transactional error.` } }
+        res.redirect(302, '/cart')
+    }
+});
 
 module.exports = { router: router };

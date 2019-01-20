@@ -1,19 +1,16 @@
 const crypto = require('crypto')
+const Shop = require('./Shop');
 
-class Product {
-    constructor({ _id, title, price, imageUrl, description }) {
-        this._id = _id ? _id : crypto.pseudoRandomBytes(30).toString('hex')
-        this._title = title
-        this._price = price
-        this._imageUrl = imageUrl
-        this._description = description
-        this._connection = process.MONGO ? true : false
+class Product extends Shop {
+    constructor({ _id, _title, _price, _imageUrl, _description }) {
+        super( _id )
+        this._title = _title
+        this._price = _price
+        this._imageUrl = _imageUrl
+        this._description = _description
     }
 
     // Getters and Setter
-    get id() {
-        return this._id
-    }
     get title() {
         return this._title
     }
@@ -26,13 +23,6 @@ class Product {
     get description() {
         return this._description
     }
-    get connection() {
-        return this._connection
-    }
-
-    static get getClass() {
-        return 'products'
-    }
 
     // Methods
     async save() {
@@ -41,10 +31,10 @@ class Product {
         try {
             const status = await process.MONGO.collection(Product.getClass).update({ _id: this.id }, {
                 _id: this.id,
-                title: this.title,
-                price: this.price,
-                imageUrl: this.imageUrl,
-                description: this.description,
+                _title: this.title,
+                _price: this.price,
+                _imageUrl: this.imageUrl,
+                _description: this.description,
             }, { upsert: true })
 
             return status ? status.result.ok : null
@@ -82,21 +72,9 @@ class Product {
 
             // Variables
             const collection = process.MONGO.collection(Product.getClass);
-            const productDB = await collection.findOne(query);
+            const product = await collection.findOne(query);
             
-            // if the returned product is null return null
-            if(!productDB) return null
-            
-            // creates a product object and returns it
-            const product = new Product({
-                _id: productDB._id,
-                title: productDB.title,
-                price: productDB.price,
-                imageUrl: productDB.imageUrl,
-                description: productDB.description
-            })
-
-            return product;
+            return product ? new Product( product ) : null ;
 
         } catch (e) {
             throw new Error('Unsuccessful product findById')

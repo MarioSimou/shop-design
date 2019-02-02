@@ -1,12 +1,11 @@
-const crypto = require('crypto')
 const Shop = require('./Shop');
 
 class Product extends Shop {
-    constructor({ _id, _title, _price, _imageUrl, _description }) {
+    constructor({ _id, _title, _price, _image, _description }) {
         super( _id )
         this._title = _title
         this._price = _price
-        this._imageUrl = _imageUrl
+        this._image = _image
         this._description = _description
     }
 
@@ -17,11 +16,15 @@ class Product extends Shop {
     get price() {
         return this._price
     }
-    get imageUrl() {
-        return this._imageUrl
+    get image() {
+        return this._image
     }
     get description() {
         return this._description
+    }
+
+    set image( path ){
+        this._image = path
     }
 
     // Methods
@@ -33,7 +36,7 @@ class Product extends Shop {
                 _id: this.id,
                 _title: this.title,
                 _price: this.price,
-                _imageUrl: this.imageUrl,
+                _image: this._image,
                 _description: this.description,
             }, { upsert: true })
 
@@ -44,18 +47,32 @@ class Product extends Shop {
         }
     }
     // Static Methods
-    static async find(query = {}) {
+    static async count(){
+        if (! process.MONGO ) return null
+        try{
+            const n = await process.MONGO.collection(Product.getClass).find({}).count();
+            return n
+        }catch(e){
+            throw new Error('Unsuccessful products counting')
+        }
+    }
+
+    static async find(query = {}, options = {} ) {
         if (!process.MONGO) return null
 
         try {
+            const { limit , skip } = options
             const collection = process.MONGO.collection(Product.getClass)
-            const values = Object.values(query);
+            const values = query instanceof Object ?  Object.values(query) : [];
             let products;
 
-            if (values.length > 1)
+            if ( values.length > 1)
                 products = await collection.find(query).toArray()
             else
-                products = await collection.find({}).toArray();
+                products = await collection.find({})
+                                           .skip( skip )
+                                           .limit( limit )
+                                           .toArray();
 
             return products ? products : null
         } catch (e) {

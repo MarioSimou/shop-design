@@ -8,11 +8,9 @@
     <div class="content-wrapper">
         <% include ../templates/message.ejs %>
         <div class="toolbar">
-            <div class="field">
+            <% include ../templates/pagination.ejs %>
+            <div class="add-product">
                 <a href="/product/new" class="ui button">Add Product</a>
-            </div>
-            <div class="field">
-                <a href="/" class="ui button">Other Product</a>
             </div>
         </div>
         <div class="products-wrapper">
@@ -22,7 +20,7 @@
                 <div class="column">
                     <div class="ui fluid card">
                         <div class="image">
-                            <img src="<%= product._imageUrl %>">
+                            <img src="<%= product._image %>">
                         </div>
                         <div class="content">
                             <div class="header">
@@ -32,8 +30,11 @@
                                 <%= product._description %>
                             </div>
                             <div class="decription">
-                                <p><strong>
-                                        <%= product._price %> &pound;</strong></p>
+                                <p>
+                                    <strong>
+                                        <%= product._price %> &pound;
+                                    </strong>
+                                </p>
                             </div>
                         </div>
                         <div class="ui bottom attached button">
@@ -46,13 +47,13 @@
                                 <i class="edit icon"></i>Edit
                             </a>
                         </div>
-                        <div class="ui bottom attached button">
-                            <form action="/product/<%= product._id %>?_method=DELETE" method="POST">
-                                <button type="submit" class="attached"><i class="trash alternate icon"></i>Delete</button>
-                            </form>
+                        <div class="ui bottom attached button delete-btn" data-prodId="<%= product._id %>">
+                            <% include ../templates/csrf.ejs %>
+                            <button type="button" class="attached"><i class="trash alternate icon"></i>Delete</button>
                         </div>
                         <div class="ui bottom attached button">
                             <form action="/cart/<%= product._id %>/new" method="POST">
+                                <% include ../templates/csrf.ejs %>
                                 <button type="submit" class="attached"><i class="cart icon"></i>Add Cart</button>
                             </form>
                         </div>

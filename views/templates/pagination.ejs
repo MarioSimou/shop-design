@@ -1,0 +1,15 @@
+<div class="ui pagination menu">
+    <% if( cpage - 1){ %>
+    <a class="active item" href="/products?page=<%= cpage - 1%>">
+        Previous
+    </a>
+    <% } %>
+    <a class="item" href="/products?page=<%= cpage %>">
+        Current
+    </a>
+    <% if( (cpage + 1) <= lpage ) {%>
+    <a class="item" href="/products?page=<%= cpage + 1 %>">
+        Next
+    </a>
+    <% } %>
+</div>

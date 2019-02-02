@@ -8,7 +8,7 @@
     <div class="content-wrapper">
         <% include ../templates/message.ejs %>
         <div class="form">
-            <form action="/product" method="POST" class="ui form">
+            <form action="/product" method="POST" class="ui form" enctype="multipart/form-data">
                 <div class="field">
                     <label for="title">Title:</label>
                     <input type="text" id="title" name="title" placeholder="e.g Beats" required>
@@ -18,14 +18,16 @@
                     <input type="number" id="price" name="price" min="0" required>
                 </div>
                 <div class="field">
-                    <label for="imageUrl">Image Link:</label>
-                    <input type="text" id="imageUrl" name="imageUrl" placeholder="e.g https://www.myimage.com">
+                    <label for="image">Image File:</label>
+                    <input type="file" id="image" name="image">
                 </div>
+
                 <div class="field">
                     <label for="description">Description:</label>
                     <textarea id="description" name="description" placeholder="e.g Awesome music exprerience." required></textarea>
                 </div>
                 <div class="field">
+                    <% include ../templates/csrf.ejs %>
                     <button type="submit" class="ui button">Submit</button>
                 </div>
             </form>
@@ -34,4 +36,3 @@
 </div>
 
 <% include ../templates/footer.ejs %>
-

@@ -1,11 +1,15 @@
 .wrapper > .content-wrapper > .toolbar {
     width: 100%;
-    display: -webkit-inline-box;
-    flex-direction: column;
-    padding-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0 30px 0;
     border-bottom: 4px solid rgba(0,0,0,0.6);
     box-sizing: border-box;
+    height: 100%;
 }
+
 
 .wrapper > .content-wrapper > .form {
     width: 100%;
